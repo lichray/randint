@@ -27,11 +27,14 @@
 #define _RANDOM_H 1
 
 #include <random>
+#include <type_traits>
 
 namespace stdex {
 
 template <typename IntType>
 inline IntType randint(IntType a, IntType b) {
+	static_assert(std::is_integral<IntType>(), "not an integral");
+
 	// can be seeded with rdtsc
 	thread_local std::default_random_engine e{std::random_device{}()};
 	std::uniform_int_distribution<IntType> d{a, b};
@@ -41,6 +44,8 @@ inline IntType randint(IntType a, IntType b) {
 
 template <typename RealType>
 inline RealType randreal(RealType a, RealType b) {
+	static_assert(std::is_floating_point<RealType>(), "not a float");
+
 	// can be seeded with rdtsc
 	thread_local std::default_random_engine e{std::random_device{}()};
 	std::uniform_real_distribution<RealType> d{a, b};
