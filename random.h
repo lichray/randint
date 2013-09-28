@@ -32,6 +32,7 @@ namespace stdex {
 
 template <typename IntType>
 inline IntType randint(IntType a, IntType b) {
+	// can be seeded with rdtsc
 	thread_local std::default_random_engine e{std::random_device{}()};
 	std::uniform_int_distribution<IntType> d{a, b};
 
@@ -40,6 +41,7 @@ inline IntType randint(IntType a, IntType b) {
 
 template <typename RealType>
 inline RealType randreal(RealType a, RealType b) {
+	// can be seeded with rdtsc
 	thread_local std::default_random_engine e{std::random_device{}()};
 	std::uniform_real_distribution<RealType> d{a, b};
 
