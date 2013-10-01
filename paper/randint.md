@@ -36,7 +36,6 @@ types.
 ## Examples
 
     std::randint(0, 6);
-    std::randreal(0.0, 6.0);
 
 ## Wording
 
@@ -54,9 +53,6 @@ Change at the end of 26.5.2 rand.synopsis:
 <br/>
 <tt>template&lt;class IntType&gt;</tt><br/>
 <tt>&nbsp;&nbsp;IntType randint(IntType a, IntType b);</tt><br/>
-<br/>
-<tt>template&lt;class RealType&gt;</tt><br/>
-<tt>&nbsp;&nbsp;RealType randreal(RealType a, RealType b);</tt><br/>
 </ins></div>
 
      // 26.5.8.2.1, class template uniform_int_distribution
@@ -86,14 +82,6 @@ New section 26.5.7.3 rand.util.gurng:
 > a `uniform_int_distribution<IntType>` (26.5.8.2.1).
 > 
 > _Returns:_ _i_.
-
-    template<class RealType>
-      RealType randreal(RealType a, RealType b);
-
-> _Effects:_ Produce a random number _x_, _a &le; x &lt; b_, from
-> a `uniform_real_distribution<RealType>` (26.5.8.2.2).
-> 
-> _Returns:_ _x_.
 
 ## Notes
 

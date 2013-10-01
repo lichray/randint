@@ -53,15 +53,6 @@ inline IntType randint(IntType a, IntType b)
 	return d(detail::global_rng());
 }
 
-template <typename RealType>
-inline RealType randreal(RealType a, RealType b)
-{
-	static_assert(std::is_floating_point<RealType>(), "not a float");
-
-	std::uniform_real_distribution<RealType> d{a, b};
-	return d(detail::global_rng());
-}
-
 inline void reseed(std::default_random_engine::result_type s =
     std::default_random_engine::default_seed)
 {
