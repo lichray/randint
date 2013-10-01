@@ -13,3 +13,4 @@ tags : *.h example.cc
 
 example : example.o
 	${CXX} ${LDFLAGS} -o example example.o
+example.o : example.cc random.h
