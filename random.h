@@ -34,7 +34,8 @@ namespace stdex {
 namespace detail {
 
 inline auto global_rng()
-	-> std::default_random_engine& {
+	-> std::default_random_engine&
+{
 	// can be seeded with rdtsc
 	thread_local std::default_random_engine e{std::random_device{}()};
 	return e;
@@ -43,7 +44,8 @@ inline auto global_rng()
 }
 
 template <typename IntType>
-inline IntType randint(IntType a, IntType b) {
+inline IntType randint(IntType a, IntType b)
+{
 	// does not satisfy 26.5.1.1/1(e).
 	static_assert(std::is_integral<IntType>(), "not an integral");
 
@@ -52,7 +54,8 @@ inline IntType randint(IntType a, IntType b) {
 }
 
 template <typename RealType>
-inline RealType randreal(RealType a, RealType b) {
+inline RealType randreal(RealType a, RealType b)
+{
 	static_assert(std::is_floating_point<RealType>(), "not a float");
 
 	std::uniform_real_distribution<RealType> d{a, b};
