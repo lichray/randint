@@ -31,27 +31,32 @@
 
 namespace stdex {
 
+namespace detail {
+
+inline auto global_rng()
+	-> std::default_random_engine& {
+	// can be seeded with rdtsc
+	thread_local std::default_random_engine e{std::random_device{}()};
+	return e;
+}
+
+}
+
 template <typename IntType>
 inline IntType randint(IntType a, IntType b) {
 	// does not satisfy 26.5.1.1/1(e).
 	static_assert(std::is_integral<IntType>(), "not an integral");
 
-	// can be seeded with rdtsc
-	thread_local std::default_random_engine e{std::random_device{}()};
 	std::uniform_int_distribution<IntType> d{a, b};
-
-	return d(e);
+	return d(detail::global_rng());
 }
 
 template <typename RealType>
 inline RealType randreal(RealType a, RealType b) {
 	static_assert(std::is_floating_point<RealType>(), "not a float");
 
-	// can be seeded with rdtsc
-	thread_local std::default_random_engine e{std::random_device{}()};
 	std::uniform_real_distribution<RealType> d{a, b};
-
-	return d(e);
+	return d(detail::global_rng());
 }
 
 }
