@@ -33,6 +33,7 @@ namespace stdex {
 
 template <typename IntType>
 inline IntType randint(IntType a, IntType b) {
+	// does not satisfy 26.5.1.1/1(e).
 	static_assert(std::is_integral<IntType>(), "not an integral");
 
 	// can be seeded with rdtsc

@@ -37,7 +37,6 @@ types.
 
     std::randint(0, 6);
     std::randreal(0.0, 6.0);
-    std::randint('A', 'G');  // Q: 26.5.1.1/1(e)
 
 ## Wording
 
