@@ -62,6 +62,18 @@ inline RealType randreal(RealType a, RealType b)
 	return d(detail::global_rng());
 }
 
+inline void reseed(std::default_random_engine::result_type s =
+    std::default_random_engine::default_seed)
+{
+	detail::global_rng().seed(s);
+}
+
+template <typename Sseq>
+inline void reseed(Sseq& q)
+{
+	detail::global_rng().seed(q);
+}
+
 }
 
 #endif
