@@ -36,7 +36,8 @@ types.
 ## Examples
 
     std::randint(0, 6);  // randomly seeded
-    std::reseed(0);      // support all `seed` interfaces
+    std::reseed(0);      // help debugging in a single thread program
+    std::reseed();       // random again
 
 ## Wording
 

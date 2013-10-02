@@ -9,9 +9,9 @@ int main()
 	std::cout << randint(0, 6) << std::endl;
 	// std::cout << randint('A', 'G') << std::endl;
 
-	reseed();
+	reseed(0);
 	std::cout << randint(0, 6) << std::endl;
 
-	reseed(3);
+	reseed();
 	std::cout << randint(0, 6) << std::endl;
 }
