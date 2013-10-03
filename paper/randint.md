@@ -124,6 +124,7 @@ Collected so far:
 - `randint`, from Python`[2]`
 - `random_int`,  by STL
 - `pick_int`,  by me, inspired by WEB`[1]`
+- `randi`,  by Howard
 
 ## Acknowledgments
 
