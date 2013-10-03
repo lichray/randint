@@ -33,17 +33,20 @@ namespace stdex {
 
 namespace detail {
 
-inline auto global_rng()
+inline auto global_rng(bool seeded)
 	-> std::default_random_engine&
 {
 	// can be seeded with rdtsc
-	thread_local std::default_random_engine e{std::random_device{}()};
+	thread_local std::default_random_engine e{
+	    seeded ? std::random_device{}()
+	           : std::default_random_engine::default_seed
+	};
 	return e;
 }
 
 }
 
-template <typename IntType>
+template <bool seeded = true, typename IntType>
 inline IntType randint(IntType a, IntType b)
 {
 	// does not satisfy 26.5.1.1/1(e).
@@ -53,7 +56,7 @@ inline IntType randint(IntType a, IntType b)
 	using param_type = typename distribution_type::param_type;
 
 	thread_local distribution_type d;
-	return d(detail::global_rng(), param_type(a, b));
+	return d(detail::global_rng(seeded), param_type(a, b));
 }
 
 }
