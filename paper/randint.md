@@ -46,16 +46,11 @@ vulnerability, like `rand(time(0))`.
 - Templated.  No type promotion; inputs and result have the same types.
 
 Seeding a pseudo random number generator with a determined value will result
-in a determined sequence of random numbers (repeatability), which is useful
-for debugging.  So a re-seeding utility is also proposed.  However, there are
-some differences between this interface and the `seed` member functions:
-
-- Seeding without an argument performs random seeding.  Because default
-`seed()` sets a random engine to the default state, while the default state
-of the global random engine is randomly seeded.
-
-- Seed sequence is not supported.  The effect of using seed sequence from
-multiple threads is unpredicatable.
+in a determined random number sequence (repeatability), which is useful
+for debugging.  However, a global seeding utility is incompatible with the
+proposed minimal interface, and causes numerous confusions in a multi-thread
+environment.  Instead, an implementation may want to allow user to deploy a
+determined seed for debugging purpose.
 
 Different from the initial draft of this paper, only the utility using
 `uniform_int_distribution` is proposed; the one using
@@ -63,11 +58,9 @@ Different from the initial draft of this paper, only the utility using
 "selection" model, which covers the major use cases, while the later is merely
 a simulation of data input.
 
-## Examples
+## Example
 
     std::randint(0, 6);  // randomly seeded
-    std::reseed(0);      // help debugging in a single thread program
-    std::reseed();       // random again
 
 ## Wording
 
@@ -84,10 +77,6 @@ Change 26.5.2 rand.synopsis:
 <tt>// 26.5.7.3, function template randint</tt><br/>
 <tt>template&lt;class IntType&gt;</tt><br/>
 <tt>&nbsp;&nbsp;IntType randint(IntType a, IntType b);</tt><br/>
-<br/>
-<tt>// 26.5.7.4, function reseed</tt><br/>
-<tt>void reseed();</tt><br/>
-<tt>void reseed(default_random_engine::result_type s);</tt><br/>
 </ins></div>
 
      // 26.5.8.2.1, class template uniform_int_distribution
@@ -108,9 +97,9 @@ New section 26.5.7.3 rand.util.randint:
 > race (17.6.5.9).
 > *\[Note: It is implementation-defined whether the instantiations in
 > different threads share
-> the same random engine to increase randomness, but the call expressions
+> the same random engine, but the call expressions
 > from different threads shall not be able to observe the same pseudo random
-> number sequences in a deterministic way.  --end note\]*
+> number sequence in a deterministic way.  --end note\]*
 
     template<class IntType>
       IntType randint(IntType a, IntType b);
@@ -121,33 +110,6 @@ New section 26.5.7.3 rand.util.randint:
 > a `uniform_int_distribution<IntType>` (26.5.8.2.1).
 > 
 > _Returns:_ _i_.
-
-New section 26.5.7.4 rand.util.reseed:
-
-> #### 26.5.7.4 function `reseed`
-
-> The overloaded functions described in this section 26.5.7.4 seed the
-> random engine described in 26.5.7.3.  Calls to these functions shall
-> not introduce a data race.
-
-*\[Editorial-note:  But the repeatability may only be observable when
-`randint` is being used in a single thread.  --end note\]*
-
-    void reseed();
-
-> _Effects:_ With `g` as the random engine, invokes `g.seed(s)`, where
-> `s` is a non-deterministic value of type
-> `default_random_engine::result_type`.
-
-    void reseed(default_random_engine::result_type s);
-
-> _Effects:_ With `g` as the random engine, invokes `g.seed(s)`.
-
-## Future Issues
-
-It makes sense to me to require those functions `noexcept`, but I also
-don't want to forbid an implementation to seed the random engine with
-`random_device`.
 
 ## References
 
