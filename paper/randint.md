@@ -113,6 +113,17 @@ New section 26.5.7.3 rand.util.randint:
 A sample implementation is available at
 <https://github.com/lichray/randint> ...You really need this?
 
+## Bikeshed
+
+First of all, overloading `std::rand` is not an option.  User may regard
+`std::rand()` as a "safe" variant to the new interface.
+
+Collected so far:
+
+- `randint`, from Python`[2]`
+- `random_int`,  by STL
+- `pick_int`,  by me, inspired by WEB`[1]`
+
 ## Acknowledgments
 
 Hans Boehm, who emphasized the importance of an enforced per-thread random
