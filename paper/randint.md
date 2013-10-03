@@ -113,6 +113,20 @@ New section 26.5.7.3 rand.util.randint:
 A sample implementation is available at
 <https://github.com/lichray/randint> ...You really need this?
 
+## Acknowledgments
+
+Hans Boehm, who emphasized the importance of an enforced per-thread random
+engine more than once.
+
+Stephan T. Lavavej, who carefully reviewed this paper and provided many
+corrections.
+
+Walter E. Brown, who drafted the paper`[1]` which contains basically the same
+thought.
+
+And many others who joined the `std::rand` related discussions on _c++std-lib_
+and _c++std-lib-ext_ mailing lists.
+
 ## References
 
 `[1]` Brown, Walter E. N3742 _Three `<random>`-related Proposals, v2_.
