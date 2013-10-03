@@ -127,10 +127,10 @@ New section 26.5.7.4 rand.util.reseed:
 > #### 26.5.7.4 function `reseed`
 
 > The overloaded functions described in this section 26.5.7.4 seed the
-> random engine described in 26.5.7.3.  Calls to these functions shall
-> not introduce a data race.
+> random engine described in 26.5.7.3.
+> *\[Note:  Calls to these functions may introduce data race.  --end note\]*
 
-*\[Editorial-note:  But the repeatability may only be observable when
+*\[Editorial-note:  And the repeatability may only be observable when
 `randint` is being used in a single thread.  --end note\]*
 
     void reseed();
