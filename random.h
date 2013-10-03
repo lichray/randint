@@ -53,16 +53,6 @@ inline IntType randint(IntType a, IntType b)
 	return d(detail::global_rng());
 }
 
-inline void reseed()
-{
-	detail::global_rng().seed(std::random_device{}());
-}
-
-inline void reseed(std::default_random_engine::result_type s)
-{
-	detail::global_rng().seed(s);
-}
-
 }
 
 #endif
