@@ -93,11 +93,8 @@ New section 26.5.7.3 rand.util.randint:
 > All functions instantiated from the template described in this section
 > 26.5.7.3 share the same `default_random_engine` for a given execution of
 > a thread; the random engine is non-deterministically seeded during the
-> initialization.  Calls to any instantiation shall not introduce a data
-> race (17.6.5.9).
-> *\[Note: It is implementation-defined whether the instantiations in
-> different threads share
-> the same random engine, but the call expressions
+> initialization.  A separate random engine shall be provided for each thread.
+> *\[Note: The call expressions
 > from different threads shall not be able to observe the same pseudo random
 > number sequence in a deterministic way.  --end note\]*
 
