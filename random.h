@@ -33,11 +33,13 @@ namespace stdex {
 
 namespace detail {
 
-inline auto global_rng()
+inline auto global_rng(bool seeded, std::default_random_engine::result_type sd)
 	-> std::default_random_engine&
 {
 	// can be seeded with rdtsc
-	thread_local std::default_random_engine e{std::random_device{}()};
+	thread_local std::default_random_engine e{
+	    seeded ? std::random_device{}() : sd
+	};
 	return e;
 }
 
@@ -53,7 +55,17 @@ inline IntType randint(IntType a, IntType b)
 	using param_type = typename distribution_type::param_type;
 
 	thread_local distribution_type d;
-	return d(detail::global_rng(), param_type(a, b));
+	return d(detail::global_rng(true, 0), param_type(a, b));
+}
+
+inline void seed_init()
+{
+	detail::global_rng(false, std::default_random_engine::default_seed);
+}
+
+inline void seed_init(std::default_random_engine::result_type value)
+{
+	detail::global_rng(false, value);
 }
 
 }
