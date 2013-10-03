@@ -5,7 +5,8 @@ using stdex::randint;
 
 int main()
 {
-	std::cout << randint<stdex::default_seed>(0, 6) << std::endl;
+	stdex::preseed();
+	std::cout << randint(0, 6) << std::endl;
 	// std::cout << randint('A', 'G') << std::endl;
 
 	std::cout << randint(0, 6) << std::endl;

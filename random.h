@@ -31,8 +31,6 @@
 
 namespace stdex {
 
-struct default_seed;
-
 namespace detail {
 
 inline auto global_rng(bool seeded)
@@ -48,7 +46,7 @@ inline auto global_rng(bool seeded)
 
 }
 
-template <typename Seeding = void, typename IntType>
+template <typename IntType>
 inline IntType randint(IntType a, IntType b)
 {
 	// does not satisfy 26.5.1.1/1(e).
@@ -58,8 +56,12 @@ inline IntType randint(IntType a, IntType b)
 	using param_type = typename distribution_type::param_type;
 
 	thread_local distribution_type d;
-	return d(detail::global_rng(not std::is_same<Seeding, default_seed>()),
-	         param_type(a, b));
+	return d(detail::global_rng(true), param_type(a, b));
+}
+
+inline void preseed()
+{
+	detail::global_rng(false);
 }
 
 }
