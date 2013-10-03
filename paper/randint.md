@@ -111,6 +111,11 @@ New section 26.5.7.3 rand.util.randint:
 > 
 > _Returns:_ _i_.
 
+## Sample Implementation
+
+A sample implementation is available at
+<https://github.com/lichray/randint> ...You really need this?
+
 ## References
 
 `[1]` Brown, Walter E. N3742 _Three `<random>`-related Proposals, v2_.
