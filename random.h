@@ -49,8 +49,11 @@ inline IntType randint(IntType a, IntType b)
 	// does not satisfy 26.5.1.1/1(e).
 	static_assert(std::is_integral<IntType>(), "not an integral");
 
-	std::uniform_int_distribution<IntType> d{a, b};
-	return d(detail::global_rng());
+	using distribution_type = std::uniform_int_distribution<IntType>;
+	using param_type = typename distribution_type::param_type;
+
+	thread_local distribution_type d;
+	return d(detail::global_rng(), param_type(a, b));
 }
 
 }
