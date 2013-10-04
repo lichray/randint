@@ -23,8 +23,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _RANDOM_H
-#define _RANDOM_H 1
+#ifndef _STDEX_RANDOM_H
+#define _STDEX_RANDOM_H 1
 
 #include <random>
 #include <type_traits>
