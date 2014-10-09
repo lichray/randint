@@ -8,59 +8,59 @@ del { text-decoration: line-through; background-color: #FFA0A0 }
 </style>
 
 <table><tbody>
-<tr><th>Doc. no.:</th>	<td>N3796</td></tr>
-<tr><th>Date:</th>	<td>2013-10-02</td></tr>
-<tr><th>Project:</th>	<td>Programming Language C++, Library Evolution Working Group</td></tr>
+<tr><th>Doc. no.:</th>	<td>Nnnnn</td></tr>
+<tr><th>Date:</th>	<td>2014-10-08</td></tr>
+<tr><th>Project:</th>	<td>Programming Language C++, SG6: Numerics</td></tr>
 <tr><th>Reply-to:</th>	<td>Zhihao Yuan &lt;zy at miator dot net&gt;</td></tr>
 </tbody></table>
 
-# std::rand replacement
+# std::rand replacement, revision 1
 
 ## Motivation
 
-We want to deprecate `std::rand` friends, while "deprecation without a
+We want to deprecate the `std::rand` friends, while "deprecation without a
 replacement" is a valid concern.  This paper
 
-1. Propose replacement to the `std::rand` friends.  As a global uniform
-random number generator, `std::rand` is considered both handy and useful.
+1. Proposes replacement to the `std::rand` friends.  Despite of the security
+issues, `std::rand` is considered both handy and useful as a global uniform
+random number generator.
 
-2. Expose the most widely-used combos from C++11 `<random>` without pushing
-the users to learn the whole design of `<random>`.  Smoothing the learning
+2. Exposes the most widely-used combo in C++11 `<random>` without
+pushing the users to learn the whole design.  Smoothing the learning
 curve can usually optimize the acceptance.
 
 ## Design Decisions
 
-`std::rand` is a single interface, and its "replacement" should be able to be
-used as a single interface as well.  In addition, I expect the interface to
+`std::rand` is a self-contained interface, so its replacement should be
+independent as well.  In addition, I expect the interface to
 correctly expose the functionalities of `<random>` and lead to more robust
 and secure programs.  The proposed replacement is
 
 - Distribution based.  RNG must be used with a distribution; `std::rand`
-is just a wrong design.
+is a wrong design.
 
-- Randomly seeded before being used.  Improper seeding results in
-vulnerability, like `rand(time(0))`.
+- Randomly seeded before being used.  Improper seeding, `rand(time(0))` for
+instance, results in vulnerabilities.
 
-- Thread-safe.  Minimal interface should minimize astonishment.
+- Per-thread engine.  Minimal interface should minimize astonishment, wrt.
+thread-safety and performance.
 
-- Templated.  No type promotion; inputs and result have the same types.
+- Manually seedable.  User can observe repeatability in a given thread, which
+is a typical demand for debugging.
 
-Seeding a pseudo random number generator with a determined value will result
-in a determined random number sequence (repeatability), which is useful
-for debugging.  However, a global seeding utility is incompatible with the
-proposed minimal interface, and causes numerous confusions in a multi-thread
-environment.  Instead, an implementation may want to allow user to deploy a
-determined seed for debugging purpose.
+- Type-safe.  No integral promotion.  For a given invocation, the inputs and
+the result have the same type.
 
-Different from the initial draft of this paper, only the utility using
-`uniform_int_distribution` is proposed; the one using
-`uniform_real_distribution` is dropped.  This is because the former forms a
-"selection" model, which covers the major use cases, while the later is merely
-a simulation of data input.
+Two variants for the shuffling and sampling algorithms without the explicit
+`URNG` parameter are also proposed.
 
 ## Example
 
     std::randint(0, 6);  // randomly seeded
+
+    // in another thread
+    std::seed_init();    // default_seed
+    std::shuffle(begin(v), end(v));
 
 ## Wording
 
@@ -71,17 +71,23 @@ Change 26.5.2 rand.synopsis:
 
      // 26.5.7.2, function template generate_canonical
      template<class RealType, size_t bits, class URNG>
-     RealType generate_canonical(URNG& g);
+       RealType generate_canonical(URNG& g);
 
 <div><ins>
 <tt>// 26.5.7.3, function template randint</tt><br/>
 <tt>template&lt;class IntType&gt;</tt><br/>
 <tt>&nbsp;&nbsp;IntType randint(IntType a, IntType b);</tt><br/>
 </ins></div>
+<br/>
+<div><ins>
+<tt>// 26.5.7.4, seeding the per-thread engine</tt><br/>
+<tt>void seed_init();</tt><br/>
+<tt>void seed_init(default_random_engine::result_type value);</tt><br/>
+</ins></div>
 
      // 26.5.8.2.1, class template uniform_int_distribution
      template<class IntType = int>
-     class uniform_int_distribution;
+       class uniform_int_distribution;
 > ...
 
     } // namespace std
@@ -91,9 +97,12 @@ New section 26.5.7.3 rand.util.randint:
 > #### 26.5.7.3 function template `randint`
 
 > All functions instantiated from the template described in this section
-> 26.5.7.3 share the same `default_random_engine` for a given execution of
+> share the same `default_random_engine` for a given execution of
 > a thread; the random engine is non-deterministically seeded during the
-> initialization.  Such a random engine shall be maintained separately for
+> initialization if no call to any function described in section
+> 26.5.7.4 in the same thread is sequenced before the random engine generating
+> the first result.
+> Such a random engine shall be maintained separately for
 > each thread.
 > *\[Note: The call expressions
 > from different threads shall not be able to observe the same pseudo random
@@ -109,26 +118,109 @@ New section 26.5.7.3 rand.util.randint:
 > 
 > _Returns:_ _i_.
 
+New section 26.5.7.4 rand.util.seed_init:
+
+> #### 26.5.7.4 seeding the per-thread engine
+
+    void seed_init();
+    void seed_init(default_random_engine::result_type value);
+
+> _Requires:_ The random engine defined in section 26.5.7.3 in the same
+> thread has not been seeded.
+>
+> _Effects:_ The first form seeds the engine with
+> `default_random_engine::default_seed`.  The second form seeds the engine
+> with `value`.
+
+Change 25.1 algorithms.general:
+
+> ### Header `<algorithm>` synopsis
+> ...
+
+     // 25.3.12, shuffle:
+
+<div><ins>
+<tt>template&lt;class RandomAccessIterator&gt;</tt><br/>
+<tt>&nbsp;&nbsp;void shuffle(RandomAccessIterator first,
+RandomAccessIterator last);</tt>
+</ins></div>
+
+     template<class RandomAccessIterator, class UniformRandomNumberGenerator>
+       void shuffle(RandomAccessIterator first,
+                    RandomAccessIterator last,
+                    UniformRandomNumberGenerator&& g);
+
+Change 25.3.12 alg.random.shuffle:
+
+<div><ins>
+<tt>template&lt;class RandomAccessIterator&gt;</tt><br/>
+<tt>&nbsp;&nbsp;void shuffle(RandomAccessIterator first,
+RandomAccessIterator last);</tt>
+</ins></div>
+
+     template<class RandomAccessIterator, class UniformRandomNumberGenerator>
+       void shuffle(RandomAccessIterator first,
+                    RandomAccessIterator last,
+                    UniformRandomNumberGenerator&& g);
+
+> ...
+>
+> _Remarks:_ To the extent that the implementation of this function makes use
+> of random numbers, the object `g` shall serve as the implementation's source
+> of randomness<ins> in the second form, so does the random engine
+> defined in section 26.5.7.3 in the same thread to the first form</ins>.
+
+The following wording is relative to N4082 fund.ts.
+
+Change 10.3 alg.random.sample:
+
+<div><ins>
+<tt>template&lt;class PopulationIterator, class SampleIterator,
+class Distance&gt;</tt><br/>
+<tt>SampleIterator sample(PopulationIterator first, PopulationIterator
+last,</tt><br/>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SampleIterator
+out, Distance n);</tt>
+</ins></div>
+
+     template<class PopulationIterator, class SampleIterator,
+              class Distance, class UniformRandomNumberGenerator>
+     SampleIterator sample(PopulationIterator first, PopulationIterator last,
+                           SampleIterator out, Distance n,
+                           UniformRandomNumberGenerator&& g);
+
+> ...
+>
+> _Remarks:_
+>
+> - Stable if and only if `PopulationIterator` meets the requirements of a
+> `ForwardIterator` type.
+> - To the extent that the implementation of this function makes use
+> of random numbers, the object `g` shall serve as the implementation's source
+> of randomness<ins> in the second form, so does the random engine
+> defined in section 26.5.7.3 in the same thread to the first form</ins>.
+
 ## Sample Implementation
 
 A sample implementation is available at
-<https://github.com/lichray/randint> ...You really need this?
+<https://github.com/lichray/randint>.
 
-## Bikeshed
+## Bikeshedding
 
-First of all, overloading `std::rand` is not an option.  User may regard
+First of all, overloading `std::rand` is not an option.  User may deem
 `std::rand()` as a "safe" variant to the new interface.
 
 Collected so far:
 
 - `randint`, from Python`[2]`
+- `rand_int`, by Nicolai and Andy Sawyer
 - `random_int`,  by STL
 - `pick_int`,  by me, inspired by WEB`[1]`
 - `randi`,  by Howard
 
 ## Acknowledgments
 
-Hans Boehm, who emphasized the importance of an enforced per-thread random
+Hans Boehm, who emphasized the importance of enforcing the per-thread random
 engine more than once.
 
 Stephan T. Lavavej, who carefully reviewed this paper and provided many
