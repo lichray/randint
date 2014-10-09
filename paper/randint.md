@@ -16,6 +16,13 @@ del { text-decoration: line-through; background-color: #FFA0A0 }
 
 # std::rand replacement, revision 1
 
+## Changes since N3796
+
+- Seeding utility `seed_init` based on SG6's preference.
+- Variants for `std::shuffle` and `std::experimental::sample`.
+- Naming candidate `rand_int`.
+- Some outdated discussions are removed.
+
 ## Motivation
 
 We want to deprecate the `std::rand` friends, while "deprecation without a
