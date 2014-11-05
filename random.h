@@ -33,13 +33,20 @@ namespace stdex {
 
 namespace detail {
 
-inline auto global_rng(bool seeded, std::default_random_engine::result_type sd)
+inline auto get_seed()
+	-> std::default_random_engine::result_type
+{
+	std::default_random_engine::result_type lo;
+#if defined(__i386__) || defined(__x86_64__)
+	__asm__ __volatile__ ("rdtsc" : "=a"(lo));
+#endif
+	return lo;
+}
+
+inline auto global_rng()
 	-> std::default_random_engine&
 {
-	// can be seeded with rdtsc
-	thread_local std::default_random_engine e{
-	    seeded ? std::random_device{}() : sd
-	};
+	thread_local std::default_random_engine e{ get_seed() };
 	return e;
 }
 
@@ -48,24 +55,26 @@ inline auto global_rng(bool seeded, std::default_random_engine::result_type sd)
 template <typename IntType>
 inline IntType randint(IntType a, IntType b)
 {
-	// does not satisfy 26.5.1.1/1(e).
+	// does not entirely satisfy 26.5.1.1/1(e).
 	static_assert(std::is_integral<IntType>(), "not an integral");
 
 	using distribution_type = std::uniform_int_distribution<IntType>;
 	using param_type = typename distribution_type::param_type;
 
 	thread_local distribution_type d;
-	return d(detail::global_rng(true, 0), param_type(a, b));
+	return d(detail::global_rng(), param_type(a, b));
 }
 
-inline void seed_init()
+inline void reseed()
 {
-	detail::global_rng(false, std::default_random_engine::default_seed);
+	// as far as uniform_int_distribution carries no state
+	detail::global_rng().seed();
 }
 
-inline void seed_init(std::default_random_engine::result_type value)
+inline void reseed(std::default_random_engine::result_type value)
 {
-	detail::global_rng(false, value);
+	// as far as uniform_int_distribution carries no state
+	detail::global_rng().seed(value);
 }
 
 }
