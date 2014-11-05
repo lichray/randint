@@ -8,13 +8,21 @@ del { text-decoration: line-through; background-color: #FFA0A0 }
 </style>
 
 <table><tbody>
-<tr><th>Doc. no.:</th>	<td>Nnnnn</td></tr>
+<tr><th>Doc. no.:</th>	<td>Dnnnn</td></tr>
 <tr><th>Date:</th>	<td>2014-11-04</td></tr>
 <tr><th>Project:</th>	<td>Programming Language C++, SG6: Numerics</td></tr>
 <tr><th>Reply-to:</th>	<td>Zhihao Yuan &lt;zy at miator dot net&gt;</td></tr>
 </tbody></table>
 
 # std::rand replacement, revision 2
+
+## Changes since N4217
+
+- Rename the seeding utility to `reseed`, which resets the distributions'
+  states if needed, based on SG6 comments.
+- Cleanup the wording with the term "unpredictable state" stolen from Walter's
+  paper`[1]`.
+- Update motivation to reflect the status quo.
 
 ## Changes since N3796
 
