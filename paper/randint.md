@@ -9,12 +9,12 @@ del { text-decoration: line-through; background-color: #FFA0A0 }
 
 <table><tbody>
 <tr><th>Doc. no.:</th>	<td>Nnnnn</td></tr>
-<tr><th>Date:</th>	<td>2014-10-08</td></tr>
+<tr><th>Date:</th>	<td>2014-11-04</td></tr>
 <tr><th>Project:</th>	<td>Programming Language C++, SG6: Numerics</td></tr>
 <tr><th>Reply-to:</th>	<td>Zhihao Yuan &lt;zy at miator dot net&gt;</td></tr>
 </tbody></table>
 
-# std::rand replacement, revision 1
+# std::rand replacement, revision 2
 
 ## Changes since N3796
 
@@ -25,14 +25,13 @@ del { text-decoration: line-through; background-color: #FFA0A0 }
 
 ## Motivation
 
-We want to deprecate the `std::rand` friends, while "deprecation without a
-replacement" is a valid concern.  This paper
+The `std::rand` friends are discouraged in C++14, so we want:
 
-1. Proposes replacement to the `std::rand` friends.  Despite of the security
+1. A direct replacement to the `std::rand` friends.  Despite of the security
 issues, `std::rand` is considered both handy and useful as a global uniform
 random number generator.
 
-2. Exposes the most widely-used combo in C++11 `<random>` without
+2. To expose the most widely-used combo in C++11 `<random>` without
 pushing the users to learn the whole design.  Smoothing the learning
 curve can usually optimize the acceptance.
 
@@ -46,8 +45,8 @@ and secure programs.  The proposed replacement is
 - Distribution based.  RNG must be used with a distribution; `std::rand`
 is a wrong design.
 
-- Randomly seeded before being used.  Improper seeding, `rand(time(0))` for
-instance, results in vulnerabilities.
+- Randomly seeded before used.  Improper seeding like `rand(time(0))`
+may result in vulnerabilities.
 
 - Per-thread engine.  Minimal interface should minimize astonishment, wrt.
 thread-safety and performance.
@@ -55,7 +54,8 @@ thread-safety and performance.
 - Manually seedable.  User can observe repeatability in a given thread, which
 is a typical demand for debugging.
 
-- Type-safe.  No integral promotion.  For a given invocation, the inputs and
+- Type-safe.  No integral promotion, no loss of distribution property during
+down-casting.  For a given invocation, the inputs and
 the result have the same type.
 
 Two variants for the shuffling and sampling algorithms without the explicit
@@ -63,10 +63,11 @@ Two variants for the shuffling and sampling algorithms without the explicit
 
 ## Example
 
-    std::randint(0, 6);  // randomly seeded
+    std::randint(0, 6);              // randomly seeded
+    std::randint(0L, 6L);            // deduced type
+    std::randint<size_t>(0, 6);      // selected type
 
-    // in another thread
-    std::seed_init();    // default_seed
+    std::reseed();                   // with default_seed
     std::shuffle(begin(v), end(v));
 
 ## Wording
@@ -88,8 +89,8 @@ Change 26.5.2 rand.synopsis:
 <br/>
 <div><ins>
 <tt>// 26.5.7.4, seeding the per-thread engine</tt><br/>
-<tt>void seed_init();</tt><br/>
-<tt>void seed_init(default_random_engine::result_type value);</tt><br/>
+<tt>void reseed();</tt><br/>
+<tt>void reseed(default_random_engine::result_type value);</tt><br/>
 </ins></div>
 
      // 26.5.8.2.1, class template uniform_int_distribution
@@ -103,41 +104,38 @@ New section 26.5.7.3 rand.util.randint:
 
 > #### 26.5.7.3 function template `randint`
 
-> All functions instantiated from the template described in this section
+> All specializations of the function template described in this section
 > share the same `default_random_engine` for a given execution of
-> a thread; the random engine is non-deterministically seeded during the
-> initialization if no call to any function described in section
-> 26.5.7.4 in the same thread is sequenced before the random engine generating
-> the first result.
+> a thread; the random engine is
+> set to an unpredictable state during the initialization.
 > Such a random engine shall be maintained separately for
 > each thread.
-> *\[Note: The call expressions
-> from different threads shall not be able to observe the same pseudo random
-> number sequence in a deterministic way.  --end note\]*
 
     template<class IntType>
       IntType randint(IntType a, IntType b);
 
 > _Requires:_ `a` _&le;_ `b`
-> 
+>
 > _Effects:_ Produce a random integer _i_, _a &le; i &le; b_, from
 > a `uniform_int_distribution<IntType>` (26.5.8.2.1).
-> 
+>
 > _Returns:_ _i_.
 
-New section 26.5.7.4 rand.util.seed_init:
+New section 26.5.7.4 rand.util.reseed:
 
 > #### 26.5.7.4 seeding the per-thread engine
 
-    void seed_init();
-    void seed_init(default_random_engine::result_type value);
+    void reseed();
+    void reseed(default_random_engine::result_type value);
 
-> _Requires:_ The random engine defined in section 26.5.7.3 in the same
-> thread has not been seeded.
+> Let `g` be the random engine defined in section 26.5.7.3 in the same
+> thread.
 >
-> _Effects:_ The first form seeds the engine with
-> `default_random_engine::default_seed`.  The second form seeds the engine
-> with `value`.
+> _Effects:_ The first form invokes `g.seed()`.
+> The second form invokes `g.seed(value)`.
+>
+> _Postcondition_: Subsequent uses of any random number distributions do
+> not depend on values produced by `g` prior to this call.
 
 Change 25.1 algorithms.general:
 
