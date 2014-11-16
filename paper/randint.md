@@ -17,6 +17,9 @@ Working Group</td></tr>
 
 # std::rand replacement, revision 2
 
+* TOC
+{:toc}
+
 ## Changes since N4217
 
 - Rename the seeding utility to `reseed`, which resets the distributions'
