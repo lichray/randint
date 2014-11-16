@@ -142,7 +142,8 @@ New section 26.5.7.4 &#91;rand.util.reseed&#93;:
 > _Effects:_ The first form invokes `g.seed()`.
 > The second form invokes `g.seed(value)`.
 >
-> _Postcondition_: Subsequent uses of any random number distributions do
+> _Postcondition_: Subsequent uses of any specializations of `randint`
+> (26.5.7.3) do
 > not depend on values produced by `g` prior to this call.
 
 Change 25.1 &#91;algorithms.general&#93;:
