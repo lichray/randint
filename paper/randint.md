@@ -9,7 +9,7 @@ del { text-decoration: line-through; background-color: #FFA0A0 }
 
 <table><tbody>
 <tr><th>Doc. no.:</th>	<td>Dnnnn</td></tr>
-<tr><th>Date:</th>	<td>2014-11-04</td></tr>
+<tr><th>Date:</th>	<td>2014-11-08</td></tr>
 <tr><th>Project:</th>	<td>Programming Language C++, SG6: Numerics</td></tr>
 <tr><th>Reply-to:</th>	<td>Zhihao Yuan &lt;zy at miator dot net&gt;</td></tr>
 </tbody></table>
@@ -80,7 +80,7 @@ Two variants for the shuffling and sampling algorithms without the explicit
 
 ## Wording
 
-Change 26.5.2 rand.synopsis:
+Change 26.5.2 &#91;rand.synopsis&#93;:
 
     namespace std {
 > ...
@@ -108,7 +108,7 @@ Change 26.5.2 rand.synopsis:
 
     } // namespace std
 
-New section 26.5.7.3 rand.util.randint:
+New section 26.5.7.3 &#91;rand.util.randint&#93;:
 
 > #### 26.5.7.3 function template `randint`
 
@@ -129,7 +129,7 @@ New section 26.5.7.3 rand.util.randint:
 >
 > _Returns:_ _i_.
 
-New section 26.5.7.4 rand.util.reseed:
+New section 26.5.7.4 &#91;rand.util.reseed&#93;:
 
 > #### 26.5.7.4 seeding the per-thread engine
 
@@ -145,7 +145,7 @@ New section 26.5.7.4 rand.util.reseed:
 > _Postcondition_: Subsequent uses of any random number distributions do
 > not depend on values produced by `g` prior to this call.
 
-Change 25.1 algorithms.general:
+Change 25.1 &#91;algorithms.general&#93;:
 
 > ### Header `<algorithm>` synopsis
 > ...
@@ -163,7 +163,7 @@ RandomAccessIterator last);</tt>
                     RandomAccessIterator last,
                     UniformRandomNumberGenerator&& g);
 
-Change 25.3.12 alg.random.shuffle:
+Change 25.3.12 &#91;alg.random.shuffle&#93;:
 
 <div><ins>
 <tt>template&lt;class RandomAccessIterator&gt;</tt><br/>
@@ -183,9 +183,9 @@ RandomAccessIterator last);</tt>
 > of randomness<ins> in the second form, so does the random engine
 > defined in section 26.5.7.3 in the same thread to the first form</ins>.
 
-The following wording is relative to N4082 fund.ts.
+The following wording is tentatively relative to N4082 **&#91;fund.ts&#93;**.
 
-Change 10.3 alg.random.sample:
+Change 10.3 &#91;alg.random.sample&#93;:
 
 <div><ins>
 <tt>template&lt;class PopulationIterator, class SampleIterator,
