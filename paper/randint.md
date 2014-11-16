@@ -10,7 +10,8 @@ del { text-decoration: line-through; background-color: #FFA0A0 }
 <table><tbody>
 <tr><th>Doc. no.:</th>	<td>Dnnnn</td></tr>
 <tr><th>Date:</th>	<td>2014-11-08</td></tr>
-<tr><th>Project:</th>	<td>Programming Language C++, SG6: Numerics</td></tr>
+<tr><th>Project:</th>	<td>Programming Language C++, Library Evolution
+Working Group</td></tr>
 <tr><th>Reply-to:</th>	<td>Zhihao Yuan &lt;zy at miator dot net&gt;</td></tr>
 </tbody></table>
 
@@ -22,6 +23,7 @@ del { text-decoration: line-through; background-color: #FFA0A0 }
   states if needed, based on SG6 comments.
 - Cleanup the wording with the term "unpredictable state" stolen from Walter's
   paper`[1]`.
+- Ask the question about exposing the per-thread engine in Future Issues.
 - Update motivation to reflect the status quo.
 
 ## Changes since N3796
@@ -231,6 +233,15 @@ Collected so far:
 - `random_int`,  by STL
 - `pick_int`,  by me, inspired by WEB`[1]`
 - `randi`,  by Howard
+
+## Future Issues
+
+Should we expose the per-thread engine to users?
+
+This encourages practices not discussed in this paper, however, some SG6
+participants showed interests.  In Walter's paper, it's `std::global_urng()`.
+I may prefer to call it `std::this_thread::random_engine()` (still in
+`<random>`).
 
 ## Acknowledgments
 
