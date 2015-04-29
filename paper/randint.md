@@ -9,16 +9,20 @@ del { text-decoration: line-through; background-color: #FFA0A0 }
 
 <table><tbody>
 <tr><th>Doc. no.:</th>	<td>Dnnnn</td></tr>
-<tr><th>Date:</th>	<td>2014-11-08</td></tr>
+<tr><th>Date:</th>	<td>2015-04-29</td></tr>
 <tr><th>Project:</th>	<td>Programming Language C++, Library Evolution
 Working Group</td></tr>
 <tr><th>Reply-to:</th>	<td>Zhihao Yuan &lt;zy at miator dot net&gt;</td></tr>
 </tbody></table>
 
-# std::rand replacement, revision 2
+# std::rand replacement, revision 3
 
 * TOC
 {:toc}
+
+## Changes since N4316
+
+- `reseed()` (without argument) randomizes the engine.
 
 ## Changes since N4217
 
@@ -80,8 +84,9 @@ Two variants for the shuffling and sampling algorithms without the explicit
     std::randint(0L, 6L);            // deduced type
     std::randint<size_t>(0, 6);      // selected type
 
-    std::reseed();                   // with default_seed
+    std::reseed(0);                  // for debugging purpose
     std::shuffle(begin(v), end(v));
+    std::reseed();                   // back to random
 
 ## Wording
 
@@ -144,7 +149,7 @@ New section 26.5.7.4 &#91;rand.util.reseed&#93;:
 > Let `g` be the random engine defined in section 26.5.7.3 in the same
 > thread.
 >
-> _Effects:_ The first form invokes `g.seed()`.
+> _Effects:_ The first form sets `g` to an unpredictable state.
 > The second form invokes `g.seed(value)`.
 >
 > _Postcondition_: Subsequent uses of any specializations of `randint`
