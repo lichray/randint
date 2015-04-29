@@ -68,7 +68,7 @@ inline IntType randint(IntType a, IntType b)
 inline void reseed()
 {
 	// as far as uniform_int_distribution carries no state
-	detail::global_rng().seed();
+	detail::global_rng().seed(detail::get_seed());
 }
 
 inline void reseed(std::default_random_engine::result_type value)
