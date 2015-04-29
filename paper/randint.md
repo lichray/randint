@@ -191,7 +191,7 @@ RandomAccessIterator last);</tt>
 >
 > _Remarks:_ To the extent that the implementation of this function makes use
 > of random numbers, the object `g` shall serve as the implementation's source
-> of randomness<ins> in the second form, so does the random engine
+> of randomness <ins>in the second form, so does the random engine
 > defined in section 26.5.7.3 in the same thread to the first form</ins>.
 
 The following wording is tentatively relative to N4082 **&#91;fund.ts&#93;**.
@@ -221,7 +221,7 @@ out, Distance n);</tt>
 > `ForwardIterator` type.
 > - To the extent that the implementation of this function makes use
 > of random numbers, the object `g` shall serve as the implementation's source
-> of randomness<ins> in the second form, so does the random engine
+> of randomness <ins>in the second form, so does the random engine
 > defined in section 26.5.7.3 in the same thread to the first form</ins>.
 
 ## Sample Implementation
