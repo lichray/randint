@@ -9,7 +9,7 @@ del { text-decoration: line-through; background-color: #FFA0A0 }
 
 <table><tbody>
 <tr><th>Doc. no.:</th>	<td>Dnnnn</td></tr>
-<tr><th>Date:</th>	<td>2015-04-29</td></tr>
+<tr><th>Date:</th>	<td>2015-05-08</td></tr>
 <tr><th>Project:</th>	<td>Programming Language C++, Library Evolution
 Working Group</td></tr>
 <tr><th>Reply-to:</th>	<td>Zhihao Yuan &lt;zy at miator dot net&gt;</td></tr>
@@ -23,6 +23,8 @@ Working Group</td></tr>
 ## Changes since N4316
 
 - `reseed()` (without argument) randomizes the engine.
+- Uninterested sections removed.
+- Feature-testing recommendation added.
 
 ## Changes since N4217
 
@@ -224,32 +226,14 @@ out, Distance n);</tt>
 > of randomness <ins>in the second form, so does the random engine
 > defined in section 26.5.7.3 in the same thread to the first form</ins>.
 
+## Feature-testing recommendation
+
+Please use `randint` as the macro name suffix in the library category.
+
 ## Sample Implementation
 
 A sample implementation is available at
 <https://github.com/lichray/randint>.
-
-## Bikeshedding
-
-First of all, overloading `std::rand` is not an option.  User may deem
-`std::rand()` as a "safe" variant to the new interface.
-
-Collected so far:
-
-- `randint`, from Python`[2]`
-- `rand_int`, by Nicolai and Andy Sawyer
-- `random_int`,  by STL
-- `pick_int`,  by me, inspired by WEB`[1]`
-- `randi`,  by Howard
-
-## Future Issues
-
-Should we expose the per-thread engine to users?
-
-This encourages practices not discussed in this paper, however, some SG6
-participants showed interests.  In Walter's paper, it's `std::global_urng()`.
-I may prefer to call it `std::this_thread::random_engine()` (still in
-`<random>`).
 
 ## Acknowledgments
 
