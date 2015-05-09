@@ -25,6 +25,7 @@ Working Group</td></tr>
 - `reseed()` (without argument) randomizes the engine.
 - Uninterested sections removed.
 - Feature-testing recommendation added.
+- Wording reworked.
 
 ## Changes since N4217
 
@@ -106,9 +107,7 @@ Change 26.5.2 &#91;rand.synopsis&#93;:
 <tt>template&lt;class IntType&gt;</tt><br/>
 <tt>&nbsp;&nbsp;IntType randint(IntType a, IntType b);</tt><br/>
 </ins></div>
-<br/>
 <div><ins>
-<tt>// 26.5.7.4, seeding the per-thread engine</tt><br/>
 <tt>void reseed();</tt><br/>
 <tt>void reseed(default_random_engine::result_type value);</tt><br/>
 </ins></div>
@@ -122,41 +121,37 @@ Change 26.5.2 &#91;rand.synopsis&#93;:
 
 New section 26.5.7.3 &#91;rand.util.randint&#93;:
 
-> #### 26.5.7.3 function template `randint`
+> #### 26.5.7.3 Function template `randint`
 
-> All specializations of the function template described in this section
-> share the same `default_random_engine` for a given execution of
-> a thread; the random engine is
-> set to an unpredictable state during the initialization.
-> Such a random engine shall be maintained separately for
-> each thread.
+> A separate _per-thread engine_ of type `default_random_engine`,
+> initialized to an unpredictable state,
+> shall be maintained for each thread.
 
     template<class IntType>
       IntType randint(IntType a, IntType b);
 
-> _Requires:_ `a` _&le;_ `b`
+> _Requires:_ `a` _&le;_ `b`.  If the template argument does not meet the
+> requirements for `IntType` (26.5.1.1),
+> the program is ill-formed.
 >
-> _Effects:_ Produce a random integer _i_, _a &le; i &le; b_, from
-> a `uniform_int_distribution<IntType>` (26.5.8.2.1).
->
-> _Returns:_ _i_.
-
-New section 26.5.7.4 &#91;rand.util.reseed&#93;:
-
-> #### 26.5.7.4 seeding the per-thread engine
+> _Returns:_ A random integer _i_, _a &le; i &le; b_, produced from
+> a thread-local instance of `uniform_int_distribution<IntType>` (26.5.8.2.1)
+> invoked with the per-thread engine.
 
     void reseed();
     void reseed(default_random_engine::result_type value);
 
-> Let `g` be the random engine defined in section 26.5.7.3 in the same
-> thread.
->
-> _Effects:_ The first form sets `g` to an unpredictable state.
+> _Effects:_ Let `g` be the per-thread engine (26.5.7.3).
+> The first form sets `g` to an unpredictable state.
 > The second form invokes `g.seed(value)`.
 >
-> _Postcondition_: Subsequent uses of any specializations of `randint`
+> _Postcondition:_ Subsequent calls to `randint`
 > (26.5.7.3) do
-> not depend on values produced by `g` prior to this call.
+> not depend on values produced by `g` before calling `reseed`.
+> *\[Note:*
+> `reseed` also resets any instances of `uniform_int_distribution` used
+> by `randint`.
+> *--end note\]*
 
 Change 25.1 &#91;algorithms.general&#93;:
 
@@ -191,10 +186,12 @@ RandomAccessIterator last);</tt>
 
 > ...
 >
-> _Remarks:_ To the extent that the implementation of this function makes use
+> _Remarks:_
+> <ins>If `g` is not given in the argument list, it denotes the per-thread
+> engine (26.5.7.3).</ins>
+> To the extent that the implementation of this function makes use
 > of random numbers, the object `g` shall serve as the implementation's source
-> of randomness <ins>in the second form, so does the random engine
-> defined in section 26.5.7.3 in the same thread to the first form</ins>.
+> of randomness.
 
 The following wording is tentatively relative to N4082 **&#91;fund.ts&#93;**.
 
@@ -221,10 +218,8 @@ out, Distance n);</tt>
 >
 > - Stable if and only if `PopulationIterator` meets the requirements of a
 > `ForwardIterator` type.
-> - To the extent that the implementation of this function makes use
-> of random numbers, the object `g` shall serve as the implementation's source
-> of randomness <ins>in the second form, so does the random engine
-> defined in section 26.5.7.3 in the same thread to the first form</ins>.
+> - <ins>If `g` is not given in the argument list, it denotes the per-thread
+> engine (26.5.7.3).</ins> To the extent that the implementation of this function makes use of random numbers, the object `g` shall serve as the implementation's source of randomness.
 
 ## Feature-testing recommendation
 
