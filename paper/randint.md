@@ -10,8 +10,9 @@ del { text-decoration: line-through; background-color: #FFA0A0 }
 <table><tbody>
 <tr><th>Doc. no.:</th>	<td>Dnnnn</td></tr>
 <tr><th>Date:</th>	<td>2015-05-08</td></tr>
-<tr><th>Project:</th>	<td>Programming Language C++, Library Evolution
+<tr><th>Project:</th>	<td>Programming Language C++, Library
 Working Group</td></tr>
+<tr><th>Revises:</th>	<td>N4316</td></tr>
 <tr><th>Reply-to:</th>	<td>Zhihao Yuan &lt;zy at miator dot net&gt;</td></tr>
 </tbody></table>
 
