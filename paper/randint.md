@@ -193,9 +193,13 @@ RandomAccessIterator last);</tt>
 > of random numbers, the object `g` shall serve as the implementation's source
 > of randomness.
 
-The following wording is tentatively relative to N4082 **&#91;fund.ts&#93;**.
+The following wording is relative to N4529 **&#91;fund.ts2&#93;**.
 
-Change 10.3 &#91;alg.random.sample&#93;:
+> *\[Editorial note:*
+> Please consider referring the C++17 working paper.
+> *--end note\]*
+
+Change 12.3 &#91;alg.random.sample&#93;:
 
 <div><ins>
 <tt>template&lt;class PopulationIterator, class SampleIterator,
